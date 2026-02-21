@@ -1,0 +1,8 @@
+.gemini/
+__pycache__/
+*.json
+.DS_Store
+.env
+venv/
+node_modules/
+dist/

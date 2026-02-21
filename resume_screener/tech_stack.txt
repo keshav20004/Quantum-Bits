@@ -1,0 +1,28 @@
+# Tech Stack Overview - Resume Screener AI
+
+This application is built using modern web and AI technologies.
+
+## Languages Used
+- **Frontend**: JavaScript (React)
+- **Backend**: Python (FastAPI)
+
+## Technical Details
+
+### Backend (Python)
+- **Framework**: FastAPI (High performance, easy to build APIs)
+- **AI Integration**: LangChain + Google Generative AI
+- **LLM Model**: Google Gemini 1.5 Flash
+- **PDF Parsing**: PyPDF2
+- **Environment Management**: python-dotenv
+
+### Frontend (JavaScript)
+- **Library**: React.js
+- **Build Tool**: Vite (Fast development and bundling)
+- **Styling**: Vanilla CSS (Custom Glassmorphism Design)
+- **Animations**: Framer Motion
+- **Icons**: Lucide React
+- **API Client**: Axios
+
+## Hosting Recommendation
+- **Backend**: Render, Railway, or Heroku
+- **Frontend**: Vercel or Netlify
