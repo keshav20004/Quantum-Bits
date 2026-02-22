@@ -4,6 +4,7 @@ import { SignedIn, SignedOut, SignIn, useUser, useAuth, UserButton } from '@cler
 import './index.css';
 import PricingPage from './PricingPage';
 import LegalPages from './LegalPages';
+import LandingPage from './LandingPage';
 
 const App = () => {
   // ── Clerk Auth hooks ─────────────────────
@@ -336,9 +337,7 @@ const App = () => {
   return (
     <>
       <SignedOut>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', background: 'var(--slate-50)' }}>
-          <SignIn routing="hash" />
-        </div>
+        <LandingPage />
       </SignedOut>
       <SignedIn>
         <div className="app">
