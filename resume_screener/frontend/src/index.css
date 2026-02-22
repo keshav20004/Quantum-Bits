@@ -7,6 +7,11 @@
   box-sizing: border-box;
 }
 
+*:focus-visible {
+  outline: 2px solid var(--blue-500);
+  outline-offset: 2px;
+}
+
 :root {
   --slate-50: #f8fafc;
   --slate-100: #f1f5f9;
@@ -36,8 +41,6 @@
   --amber-50: #fffbeb;
   --amber-500: #f59e0b;
   --amber-600: #d97706;
-  --purple-500: #a855f7;
-  --purple-600: #9333ea;
   --radius: 10px;
   --radius-lg: 14px;
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -107,7 +110,7 @@ body {
   font-weight: 600;
   cursor: pointer;
   border-radius: 6px;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
   letter-spacing: -0.01em;
 }
 
@@ -221,12 +224,12 @@ body {
 .dropzone.bulk {
   padding: 2.5rem 1.75rem;
   border-style: dashed;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.02), rgba(168, 85, 247, 0.02));
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.02), rgba(15, 23, 42, 0.02));
 }
 
 .dropzone.bulk:hover {
-  border-color: var(--purple-500);
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(168, 85, 247, 0.05));
+  border-color: var(--slate-800);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(15, 23, 42, 0.05));
 }
 
 .dropzone.bulk .dropzone-content {
@@ -401,13 +404,13 @@ textarea::placeholder {
 }
 
 .cta.bulk-cta {
-  background: linear-gradient(135deg, var(--blue-600), var(--purple-600));
+  background: linear-gradient(135deg, var(--blue-600), var(--slate-800));
   font-size: 1rem;
   padding: 0.85rem 1.5rem;
 }
 
 .cta.bulk-cta:hover {
-  background: linear-gradient(135deg, var(--blue-700), var(--purple-500));
+  background: linear-gradient(135deg, var(--blue-700), var(--slate-900));
 }
 
 .loading-state {
@@ -474,7 +477,7 @@ textarea::placeholder {
 .progress-bar-fill {
   height: 100%;
   border-radius: 10px;
-  background: linear-gradient(90deg, var(--blue-500), var(--purple-500));
+  background: linear-gradient(90deg, var(--blue-500), var(--blue-700));
   transition: width 0.3s ease;
   position: relative;
 }
@@ -494,6 +497,18 @@ textarea::placeholder {
 
   100% {
     transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
@@ -614,7 +629,7 @@ textarea::placeholder {
   font-family: inherit;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: color 0.15s, background 0.15s;
 }
 
 .filter-toggle button+button {
@@ -639,7 +654,7 @@ textarea::placeholder {
   font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
 }
 
 .download-btn:hover {
@@ -776,6 +791,7 @@ textarea::placeholder {
   font-size: 0.82rem;
   min-width: 32px;
   text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
 .score-value.high {

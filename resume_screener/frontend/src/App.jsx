@@ -331,7 +331,7 @@ const App = () => {
   }
 
   // Don't render main app until clerk finishes loading
-  if (!isLoaded) return <div className="appLoading">Loading...</div>;
+  if (!isLoaded) return <div className="appLoading">Loading…</div>;
 
   return (
     <>
@@ -511,7 +511,7 @@ const App = () => {
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
                                 {f.name}
                               </span>
-                              <button className="remove-btn" onClick={() => removeBulkFile(i)} title="Remove">
+                              <button className="remove-btn" onClick={() => removeBulkFile(i)} aria-label={`Remove ${f.name}`} title="Remove">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
                               </button>
                             </div>
@@ -665,6 +665,8 @@ const App = () => {
                               onClick={() => setExpandedRow(expandedRow === i ? null : i)}
                               style={{ cursor: 'pointer' }}
                               title="Click to see skill details"
+                              tabIndex={0}
+                              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setExpandedRow(expandedRow === i ? null : i); }}
                             >
                               <td className="rank-cell">{i + 1}</td>
                               <td className="filename-cell" title={r.filename}>{r.filename}</td>
