@@ -3,6 +3,7 @@ import axios from 'axios';
 import { SignedIn, SignedOut, SignIn, useUser, useAuth, UserButton } from '@clerk/clerk-react';
 import './index.css';
 import PricingPage from './PricingPage';
+import LegalPages from './LegalPages';
 
 const App = () => {
   // ── Clerk Auth hooks ─────────────────────
@@ -13,6 +14,7 @@ const App = () => {
   const [userProfile, setUserProfile] = useState(null);
   const [credits, setCredits] = useState(0);
   const [showPricing, setShowPricing] = useState(false);
+  const [currentLegalPage, setCurrentLegalPage] = useState(null);
 
   // Fetch or sync user profile from backend when signed in
   useEffect(() => {
@@ -316,6 +318,14 @@ const App = () => {
           onCreditsUpdate={handleCreditsUpdate}
           onClose={() => setShowPricing(false)}
         />
+      </div>
+    );
+  }
+
+  if (currentLegalPage) {
+    return (
+      <div className="app">
+        <LegalPages page={currentLegalPage} onClose={() => setCurrentLegalPage(null)} />
       </div>
     );
   }
@@ -742,8 +752,14 @@ const App = () => {
             </main>
           )}
 
-          <footer className="footer">
-            <p>ASR Services</p>
+          <footer className="footer" style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8', fontSize: '0.875rem' }}>
+            <div style={{ marginBottom: '1rem' }}>
+              <button onClick={() => setCurrentLegalPage('privacy')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', padding: '0 5px' }}>Privacy Policy</button> |
+              <button onClick={() => setCurrentLegalPage('terms')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', padding: '0 5px' }}>Terms & Conditions</button> |
+              <button onClick={() => setCurrentLegalPage('refund')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', padding: '0 5px' }}>Refund Policy</button> |
+              <button onClick={() => setCurrentLegalPage('contact')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', padding: '0 5px' }}>Contact Us</button>
+            </div>
+            <p>© 2026 Quantum Bits. All rights reserved.</p>
           </footer>
         </div>
       </SignedIn>
