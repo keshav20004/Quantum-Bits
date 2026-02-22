@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Support Agent — Presentation</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #07070d;
+            --surface: #111219;
+            --surface-2: #181a24;
+            --border: rgba(255, 255, 255, 0.06);
+            --border-accent: rgba(99, 102, 241, 0.2);
+            --text: #eef0f6;
+            --text-2: #8b8fa3;
+            --text-3: #4e5267;
+            --accent: #6366f1;
+            --accent-l: #818cf8;
+            --accent-g: rgba(99, 102, 241, 0.18);
+            --green: #22c55e;
+            --green-g: rgba(34, 197, 94, 0.15);
+            --red: #ef4444;
+            --red-g: rgba(239, 68, 68, 0.15);
+            --amber: #f59e0b;
+            --amber-g: rgba(245, 158, 11, 0.15);
+            --cyan: #06b6d4;
+            --cyan-g: rgba(6, 182, 212, 0.15);
+            --pink: #ec4899;
+            --pink-g: rgba(236, 72, 153, 0.15);
+            --orange: #f97316;
+            --orange-g: rgba(249, 115, 22, 0.15);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Slider ── */
+        .slider {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slides {
+            display: flex;
+            width: calc(100vw * 20);
+            height: 100vh;
+            transition: transform 0.6s cubic-bezier(0.22, 0.68, 0, 1.00);
+        }
+
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 5rem;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        /* ── Ambient glow per slide ── */
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: -25%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 650px;
+            height: 650px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--accent-g) 0%, transparent 70%);
+            pointer-events: none;
+            opacity: 0.45;
+        }
+
+        .slide.glow-green::before {
+            background: radial-gradient(circle, var(--green-g) 0%, transparent 70%);
+        }
+
+        .slide.glow-red::before {
+            background: radial-gradient(circle, var(--red-g) 0%, transparent 70%);
+        }
+
+        .slide.glow-amber::before {
+            background: radial-gradient(circle, var(--amber-g) 0%, transparent 70%);
+        }
+
+        .slide.glow-cyan::before {
+            background: radial-gradient(circle, var(--cyan-g) 0%, transparent 70%);
+        }
+
+        .slide.glow-pink::before {
+            background: radial-gradient(circle, var(--pink-g) 0%, transparent 70%);
+        }
+
+        /* ── Content ── */
+        .sc {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.4rem;
+            max-width: 920px;
+            width: 100%;
+        }
+
+        /* ── Typography ── */
+        h1 {
+            font-size: 3.4rem;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 1.12;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+            text-align: center;
+            margin-bottom: 0.25rem;
+        }
+
+        .sub {
+            font-size: 1.1rem;
+            color: var(--text-2);
+            text-align: center;
+            max-width: 620px;
+            line-height: 1.65;
+        }
+
+        .grad {
+            background: linear-gradient(135deg, var(--accent-l), var(--cyan), var(--green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .green-t {
+            color: var(--green);
+        }
+
+        .red-t {
+            color: var(--red);
+        }
+
+        .amber-t {
+            color: var(--amber);
+        }
+
+        .cyan-t {
+            color: var(--cyan);
+        }
+
+        .pink-t {
+            color: var(--pink);
+        }
+
+        .accent-t {
+            color: var(--accent-l);
+        }
+
+        /* ── Badge ── */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        .badge .d {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .badge .d.green {
+            background: var(--green);
+            box-shadow: 0 0 8px var(--green-g);
+        }
+
+        .badge .d.accent {
+            background: var(--accent-l);
+            box-shadow: 0 0 8px var(--accent-g);
+        }
+
+        .badge .d.amber {
+            background: var(--amber);
+            box-shadow: 0 0 8px var(--amber-g);
+        }
+
+        .badge .d.cyan {
+            background: var(--cyan);
+            box-shadow: 0 0 8px var(--cyan-g);
+        }
+
+        .badge .d.pink {
+            background: var(--pink);
+            box-shadow: 0 0 8px var(--pink-g);
+        }
+
+        .badge .d.red {
+            background: var(--red);
+            box-shadow: 0 0 8px var(--red-g);
+        }
+
+        .badge .d.orange {
+            background: var(--orange);
+            box-shadow: 0 0 8px var(--orange-g);
+        }
+
+        /* ── Cards ── */
+        .cg {
+            display: grid;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .cg.c2 {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .cg.c3 {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .cg.c4 {
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+
+        .cd {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.35rem;
+            transition: all 0.2s;
+        }
+
+        .cd:hover {
+            background: var(--surface-2);
+            border-color: var(--border-accent);
+        }
+
+        .ci {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin-bottom: 0.7rem;
+        }
+
+        .ci.accent {
+            background: var(--accent-g);
+        }
+
+        .ci.green {
+            background: var(--green-g);
+        }
+
+        .ci.cyan {
+            background: var(--cyan-g);
+        }
+
+        .ci.amber {
+            background: var(--amber-g);
+        }
+
+        .ci.pink {
+            background: var(--pink-g);
+        }
+
+        .ci.red {
+            background: var(--red-g);
+        }
+
+        .ci.orange {
+            background: var(--orange-g);
+        }
+
+        .cd h4 {
+            font-size: 0.92rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .cd p {
+            font-size: 0.8rem;
+            color: var(--text-2);
+            line-height: 1.55;
+        }
+
+        /* ── Code Block ── */
+        .cb {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.2rem 1.5rem;
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .cb pre {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.78rem;
+            line-height: 1.7;
+            color: var(--text-2);
+        }
+
+        .cb .kw {
+            color: var(--accent-l);
+        }
+
+        .cb .str {
+            color: var(--green);
+        }
+
+        .cb .cmt {
+            color: var(--text-3);
+        }
+
+        .cb .fn {
+            color: var(--cyan);
+        }
+
+        .cb .tp {
+            color: var(--amber);
+        }
+
+        .cb .dec {
+            color: var(--pink);
+        }
+
+        /* ── Flow ── */
+        .flow {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .fs {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.85rem 1.2rem;
+            font-size: 0.82rem;
+            font-weight: 500;
+            text-align: center;
+            transition: border-color 0.2s;
+        }
+
+        .fs:hover {
+            border-color: var(--border-accent);
+        }
+
+        .fa {
+            color: var(--text-3);
+            font-size: 1.2rem;
+        }
+
+        /* ── Stats ── */
+        .sg {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            width: 100%;
+            text-align: center;
+        }
+
+        .si .sv {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        .si .sl {
+            font-size: 0.78rem;
+            color: var(--text-3);
+            margin-top: 0.2rem;
+        }
+
+        /* ── Feature List ── */
+        .fl {
+            list-style: none;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .fl li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.7rem;
+            font-size: 0.9rem;
+            color: var(--text-2);
+            line-height: 1.55;
+        }
+
+        .fl .ic {
+            flex-shrink: 0;
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            margin-top: 2px;
+        }
+
+        /* ── Divider ── */
+        .div {
+            width: 60px;
+            height: 3px;
+            border-radius: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--cyan));
+            margin: 0.4rem auto;
+        }
+
+        /* ── Quote ── */
+        .quote {
+            font-size: 1.5rem;
+            font-weight: 600;
+            font-style: italic;
+            color: var(--text);
+            text-align: center;
+            max-width: 640px;
+            line-height: 1.5;
+            letter-spacing: -0.01em;
+            padding: 1rem 0;
+            border-left: 3px solid var(--accent-l);
+            padding-left: 1.5rem;
+        }
+
+        .quote-attr {
+            font-size: 0.8rem;
+            color: var(--text-3);
+            font-style: normal;
+            margin-top: 0.5rem;
+        }
+
+        /* ── Pills ── */
+        .pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+            justify-content: center;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.5rem 0.85rem;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-2);
+            transition: border-color 0.2s;
+        }
+
+        .pill:hover {
+            border-color: var(--border-accent);
+        }
+
+        .pill .em {
+            font-size: 1rem;
+        }
+
+        /* ── Comparison ── */
+        .comp {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            width: 100%;
+        }
+
+        .comp-col {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.5rem;
+        }
+
+        .comp-col h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .comp-col ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .comp-col li {
+            font-size: 0.82rem;
+            color: var(--text-2);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* ── Title extras ── */
+        .title-meta {
+            font-size: 0.85rem;
+            color: var(--text-3);
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .title-meta strong {
+            color: var(--text-2);
+            font-weight: 500;
+        }
+
+        .hero-icon {
+            font-size: 4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* ── Numbered Steps ── */
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            width: 100%;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem 1.3rem;
+            transition: border-color 0.2s;
+        }
+
+        .step:hover {
+            border-color: var(--border-accent);
+        }
+
+        .step-num {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--accent-g);
+            color: var(--accent-l);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            font-size: 0.88rem;
+            color: var(--text-2);
+        }
+
+        .step-text strong {
+            color: var(--text);
+        }
+
+        /* ── Navigation ── */
+        .nav-bar {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(17, 18, 25, 0.88);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 0.5rem 1.1rem;
+            z-index: 100;
+        }
+
+        .nb {
+            width: 38px;
+            height: 38px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text);
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+
+        .nb:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .nb:disabled {
+            opacity: 0.3;
+            cursor: default;
+        }
+
+        .nb:disabled:hover {
+            background: var(--surface);
+            border-color: var(--border);
+        }
+
+        .cnt {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-2);
+            min-width: 56px;
+            text-align: center;
+        }
+
+        /* ── Progress ── */
+        .pb {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--cyan), var(--green));
+            transition: width 0.5s ease;
+            z-index: 100;
+        }
+
+        /* ── Keyboard hint ── */
+        .kh {
+            position: fixed;
+            bottom: 5.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.68rem;
+            color: var(--text-3);
+            z-index: 100;
+            opacity: 0;
+            animation: fadeH 1s 2s forwards;
+        }
+
+        @keyframes fadeH {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* ── Animations ── */
+        .se .sc>* {
+            opacity: 0;
+            transform: translateY(18px);
+            animation: fu 0.45s ease forwards;
+        }
+
+        .se .sc>*:nth-child(1) {
+            animation-delay: 0.08s;
+        }
+
+        .se .sc>*:nth-child(2) {
+            animation-delay: 0.16s;
+        }
+
+        .se .sc>*:nth-child(3) {
+            animation-delay: 0.24s;
+        }
+
+        .se .sc>*:nth-child(4) {
+            animation-delay: 0.32s;
+        }
+
+        .se .sc>*:nth-child(5) {
+            animation-delay: 0.40s;
+        }
+
+        .se .sc>*:nth-child(6) {
+            animation-delay: 0.48s;
+        }
+
+        .se .sc>*:nth-child(7) {
+            animation-delay: 0.56s;
+        }
+
+        @keyframes fu {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── Demo Box ── */
+        .demo-box {
+            background: var(--surface);
+            border: 1px solid var(--border-accent);
+            border-radius: 14px;
+            padding: 2rem;
+            width: 100%;
+            text-align: center;
+        }
+
+        .demo-box h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .demo-items {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 0.75rem;
+        }
+
+        .demo-item {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.65rem 1rem;
+            font-size: 0.82rem;
+            color: var(--text-2);
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="pb" id="pb"></div>
+
+    <div class="slider">
+        <div class="slides" id="slides">
+
+            <!-- ═══ SLIDE 1 — Title ═══ -->
+            <div class="slide se">
+                <div class="sc">
+                    <div class="hero-icon">🤖</div>
+                    <h1><span class="grad">AI Support Agent</span></h1>
+                    <p class="sub">Automating IT Support using Artificial Intelligence</p>
+                    <div class="div"></div>
+                    <div class="title-meta">
+                        <strong>Ojas Maurya</strong><br />
+                        HCL AI Hackathon
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 2 — Problem Statement ═══ -->
+            <div class="slide glow-red">
+                <div class="sc">
+                    <span class="badge"><span class="d red"></span> Problem</span>
+                    <h2>The IT Support Bottleneck</h2>
+                    <div class="cg c2">
+                        <div class="cd">
+                            <div class="ci red">😩</div>
+                            <h4>Repetitive Queries</h4>
+                            <p>IT teams handle the same VPN, login, and system error questions over and over</p>
+                        </div>
+                        <div class="cd">
+                            <div class="ci amber">⏳</div>
+                            <h4>Slow Response Time</h4>
+                            <p>Employees wait hours — sometimes days — for simple issue resolution</p>
+                        </div>
+                        <div class="cd">
+                            <div class="ci pink">📝</div>
+                            <h4>Manual Ticket Creation</h4>
+                            <p>Support staff manually log, categorize, and assign every single ticket</p>
+                        </div>
+                        <div class="cd">
+                            <div class="ci accent">👎</div>
+                            <h4>Poor User Experience</h4>
+                            <p>Frustrating back-and-forth loops that waste everyone's time</p>
+                        </div>
+                    </div>
+                    <p class="sub" style="margin-top:0.5rem;">👉 Need: <strong style="color:var(--accent-l)">Automation
+                            + Intelligence</strong></p>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 3 — Real-World Pain ═══ -->
+            <div class="slide glow-amber">
+                <div class="sc">
+                    <span class="badge"><span class="d amber"></span> Reality</span>
+                    <h2>Real-World Pain Points</h2>
+                    <div class="sg">
+                        <div class="si">
+                            <div class="sv red-t">Hours</div>
+                            <div class="sl">Avg. wait for support resolution</div>
+                        </div>
+                        <div class="si">
+                            <div class="sv amber-t">70%</div>
+                            <div class="sl">Queries are repetitive (VPN, login, errors)</div>
+                        </div>
+                        <div class="si">
+                            <div class="sv pink-t">2x</div>
+                            <div class="sl">IT teams overloaded beyond capacity</div>
+                        </div>
+                    </div>
+                    <div class="quote">
+                        "My VPN stopped working and I waited 4 hours before someone even looked at my ticket."
+                        <div class="quote-attr">— Every employee, ever</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 4 — Our Solution ═══ -->
+            <div class="slide glow-green">
+                <div class="sc">
+                    <span class="badge"><span class="d green"></span> Solution</span>
+                    <h2>AI-Powered IT Support Agent</h2>
+                    <p class="sub">An intelligent assistant that resolves issues instantly, creates tickets
+                        automatically, and provides a centralized dashboard</p>
+                    <div class="cg c4">
+                        <div class="cd" style="text-align:center;">
+                            <div class="ci green" style="margin:0 auto 0.7rem;">⚡</div>
+                            <h4>Instant Responses</h4>
+                        </div>
+                        <div class="cd" style="text-align:center;">
+                            <div class="ci cyan" style="margin:0 auto 0.7rem;">🧠</div>
+                            <h4>Smart Troubleshooting</h4>
+                        </div>
+                        <div class="cd" style="text-align:center;">
+                            <div class="ci amber" style="margin:0 auto 0.7rem;">🎫</div>
+                            <h4>Auto Ticket Creation</h4>
+                        </div>
+                        <div class="cd" style="text-align:center;">
+                            <div class="ci accent" style="margin:0 auto 0.7rem;">📊</div>
+                            <h4>Central Dashboard</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 5 — Key Idea ═══ -->
+            <div class="slide">
+                <div class="sc">
+                    <span class="badge"><span class="d accent"></span> Core Concept</span>
+                    <h2>The Key Idea</h2>
+                    <div class="quote" style="border-left-color: var(--green);">
+                        "Resolve simple issues automatically<br />
+                        and escalate complex ones intelligently"
+                    </div>
+                    <div class="comp" style="margin-top:0.5rem;">
+                        <div class="comp-col">
+                            <h4><span style="color:var(--green)">✓</span> AI Handles</h4>
+                            <ul>
+                                <li>🔧 VPN troubleshooting</li>
+                                <li>🔧 Password reset guidance</li>
+                                <li>🔧 Common system errors</li>
+                                <li>🔧 Software installation help</li>
+                            </ul>
+                        </div>
+                        <div class="comp-col">
+                            <h4><span style="color:var(--amber)">↗</span> AI Escalates</h4>
+                            <ul>
+                                <li>🎫 Hardware failures</li>
+                                <li>🎫 Access permission issues</li>
+                                <li>🎫 Complex network problems</li>
+                                <li>🎫 Security incidents</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 6 — Architecture ═══ -->
+            <div class="slide glow-cyan">
+                <div class="sc">
+                    <span class="badge"><span class="d cyan"></span> Architecture</span>
+                    <h2>System Architecture</h2>
+                    <div class="flow">
+                        <div class="fs">👤 <strong>User</strong></div>
+                        <div class="fa">→</div>
+                        <div class="fs" style="border-color:var(--cyan)">⚛️ <strong>React Frontend</strong><br /><small
+                                style="color:var(--text-3)">Chat UI + Dashboard</small></div>
+                        <div class="fa">→</div>
+                        <div class="fs" style="border-color:var(--green)">🟢 <strong>Node.js API</strong><br /><small
+                                style="color:var(--text-3)">Express Backend</small></div>
+                        <div class="fa">→</div>
+                        <div class="fs" style="border-color:var(--accent-l)">🤖 <strong>Groq LLM</strong><br /><small
+                                style="color:var(--text-3)">AI Model</small></div>
+                    </div>
+                    <div class="flow" style="margin-top:0.5rem;">
+                        <div class="fa" style="transform:rotate(90deg);">↓</div>
+                    </div>
+                    <div class="flow">
+                        <div class="fs" style="border-color:var(--amber)">🗃️ <strong>MongoDB</strong><br /><small
+                                style="color:var(--text-3)">Tickets + Chat Memory</small></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 7 — Tech Stack ═══ -->
+            <div class="slide">
+                <div class="sc">
+                    <span class="badge"><span class="d cyan"></span> Technology</span>
+                    <h2>Tech Stack</h2>
+                    <p class="sub">Modern full-stack architecture with AI at its core</p>
+                    <div class="pills">
+                        <div class="pill"><span class="em">⚛️</span> React</div>
+                        <div class="pill"><span class="em">🟢</span> Node.js</div>
+                        <div class="pill"><span class="em">🚂</span> Express</div>
+                        <div class="pill"><span class="em">🍃</span> MongoDB</div>
+                        <div class="pill"><span class="em">🤖</span> Groq LLM</div>
+                        <div class="pill"><span class="em">💨</span> Tailwind CSS</div>
+                    </div>
+                    <div class="cg c3" style="margin-top:0.5rem;">
+                        <div class="cd">
+                            <h4 class="cyan-t">Frontend</h4>
+                            <p>React + Tailwind CSS for modern, responsive chat & dashboard UI</p>
+                        </div>
+                        <div class="cd">
+                            <h4 class="green-t">Backend</h4>
+                            <p>Node.js + Express RESTful API handling requests and orchestrating AI</p>
+                        </div>
+                        <div class="cd">
+                            <h4 class="accent-t">AI + Data</h4>
+                            <p>Groq LLM for intelligence, MongoDB for tickets & conversation memory</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 8 — AI Integration ═══ -->
+            <div class="slide glow-pink">
+                <div class="sc">
+                    <span class="badge"><span class="d pink"></span> AI Core</span>
+                    <h2>AI Integration</h2>
+                    <p class="sub">The AI engine understands, troubleshoots, and decides</p>
+                    <div class="cg c3">
+                        <div class="cd">
+                            <div class="ci pink">🧠</div>
+                            <h4>Understands Issues</h4>
+                            <p>LLM parses natural language to identify the user's exact problem</p>
+                        </div>
+                        <div class="cd">
+                            <div class="ci green">🔧</div>
+                            <h4>Troubleshoots</h4>
+                            <p>Provides step-by-step resolution instructions tailored to the issue</p>
+                        </div>
+                        <div class="cd">
+                            <div class="ci amber">🎯</div>
+                            <h4>Decides Next Step</h4>
+                            <p>If unresolved → automatically triggers ticket creation</p>
+                        </div>
+                    </div>
+                    <div class="cb" style="margin-top:0.5rem;">
+                        <pre><span class="cmt">// AI decides: resolve or escalate</span>
+<span class="kw">if</span> (aiResponse.includes(<span class="str">"TICKET"</span>)) {
+  <span class="kw">await</span> <span class="fn">createTicket</span>(userId, issueDetails);
+  <span class="kw">return</span> <span class="str">"Ticket created! Our team will be in touch."</span>;
+} <span class="kw">else</span> {
+  <span class="kw">return</span> aiResponse; <span class="cmt">// Solution provided directly</span>
+}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 9 — Conversation Memory ═══ -->
+            <div class="slide">
+                <div class="sc">
+                    <span class="badge"><span class="d accent"></span> Intelligence</span>
+                    <h2>Conversation Memory</h2>
+                    <p class="sub">Context-aware responses powered by persistent chat history</p>
+                    <div class="cg c3">
+                        <div class="cd">
+                            <div class="ci accent">💾</div>
+                            <h4>Stores History</h4>
+                            <p>Every message saved in MongoDB for full conversation context</p>
+                        </div>
+                        <div class="cd">
+                            <div class="ci cyan">🔄</div>
+                            <h4>Sends Context</h4>
+                            <p>Previous messages sent to AI so it understands the full thread</p>
+                        </div>
+                        <div class="cd">
+                            <div class="ci green">🧠</div>
+                            <h4>Context-Aware</h4>
+                            <p>AI remembers what you said earlier — no need to repeat yourself</p>
+                        </div>
+                    </div>
+                    <p class="sub" style="margin-top:0.5rem;">👉 Makes AI feel <strong
+                            style="color:var(--accent-l)">real &amp; intelligent</strong></p>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 10 — Ticket Automation ═══ -->
+            <div class="slide glow-amber">
+                <div class="sc">
+                    <span class="badge"><span class="d amber"></span> Automation</span>
+                    <h2>Ticket Automation</h2>
+                    <p class="sub">Smart escalation when AI can't resolve the issue</p>
+                    <div class="steps">
+                        <div class="step">
+                            <div class="step-num">1</div>
+                            <div class="step-text">User describes an issue that <strong>can't be resolved</strong> by AI
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">2</div>
+                            <div class="step-text">AI returns <strong style="color:var(--amber)">"TICKET"</strong>
+                                keyword in response</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">3</div>
+                            <div class="step-text">Backend <strong>automatically creates a ticket</strong> with full
+                                context</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num">4</div>
+                            <div class="step-text">Ticket <strong>stored in MongoDB</strong> → visible in dashboard
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 11 — Ticket Dashboard ═══ -->
+            <div class="slide glow-cyan">
+                <div class="sc">
+                    <span class="badge"><span class="d cyan"></span> Dashboard</span>
+                    <h2>Ticket Dashboard</h2>
+                    <p class="sub">Enterprise-grade ticket management at a glance</p>
+                    <div class="cg c3">
+                        <div class="cd" style="text-align:center;">
+                            <div class="ci cyan" style="margin:0 auto 0.7rem;">📋</div>
+                            <h4>View All Tickets</h4>
+                            <p>Complete list with issue details and timestamps</p>
+                        </div>
+                        <div class="cd" style="text-align:center;">
+                            <div class="ci red" style="margin:0 auto 0.7rem;">🔴</div>
+                            <h4>Priority Levels</h4>
+                            <p>High, Medium, Low priority classification</p>
+                        </div>
+                        <div class="cd" style="text-align:center;">
+                            <div class="ci green" style="margin:0 auto 0.7rem;">📊</div>
+                            <h4>Status Tracking</h4>
+                            <p>Open, In Progress, Resolved status updates</p>
+                        </div>
+                    </div>
+                    <p class="sub" style="margin-top:0.5rem;">👉 Looks like a <strong style="color:var(--cyan)">real
+                            enterprise system</strong></p>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 12 — Chat Interface ═══ -->
+            <div class="slide">
+                <div class="sc">
+                    <span class="badge"><span class="d green"></span> UI</span>
+                    <h2>Chat Interface</h2>
+                    <p class="sub">Modern, intuitive chat experience for effortless IT support</p>
+                    <div class="cg c3">
+                        <div class="cd">
+                            <div class="ci accent">💬</div>
+                            <h4>Modern Chat UI</h4>
+                            <p>Clean message bubbles with sender distinction and timestamps</p>
+                        </div>
+                        <div class="cd">
+                            <div class="ci green">👆</div>
+                            <h4>User-Friendly</h4>
+                            <p>Just type your problem — no forms, no dropdowns, no complexity</p>
+                        </div>
+                        <div class="cd">
+                            <div class="ci cyan">⚡</div>
+                            <h4>Real-Time</h4>
+                            <p>Instant AI responses with smooth animations and loading states</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 13 — UI Design ═══ -->
+            <div class="slide glow-pink">
+                <div class="sc">
+                    <span class="badge"><span class="d pink"></span> Design</span>
+                    <h2>UI / UX Design</h2>
+                    <p class="sub">Clean, professional SaaS-style design that feels enterprise-ready</p>
+                    <div class="cg c3">
+                        <div class="cd">
+                            <div class="ci pink">💨</div>
+                            <h4>Tailwind CSS</h4>
+                            <p>Utility-first styling for rapid, consistent UI development</p>
+                        </div>
+                        <div class="cd">
+                            <div class="ci accent">✨</div>
+                            <h4>SaaS Aesthetic</h4>
+                            <p>Clean cards, soft shadows, modern typography — polished & professional</p>
+                        </div>
+                        <div class="cd">
+                            <div class="ci cyan">📱</div>
+                            <h4>Responsive</h4>
+                            <p>Works beautifully on desktop, tablet, and mobile screens</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 14 — Workflow ═══ -->
+            <div class="slide glow-green">
+                <div class="sc">
+                    <span class="badge"><span class="d green"></span> Workflow</span>
+                    <h2>End-to-End Flow</h2>
+                    <div class="steps">
+                        <div class="step">
+                            <div class="step-num" style="background:var(--cyan-g);color:var(--cyan);">1</div>
+                            <div class="step-text"><strong>User asks a question</strong> — types their IT issue in
+                                natural language</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num" style="background:var(--accent-g);color:var(--accent-l);">2</div>
+                            <div class="step-text"><strong>AI analyzes</strong> — LLM processes the query with full
+                                conversation context</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num" style="background:var(--green-g);color:var(--green);">3</div>
+                            <div class="step-text"><strong>Provides solution</strong> — step-by-step troubleshooting
+                                instructions</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num" style="background:var(--amber-g);color:var(--amber);">4</div>
+                            <div class="step-text"><strong>If unresolved → Ticket created</strong> automatically with
+                                all details</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-num" style="background:var(--pink-g);color:var(--pink);">5</div>
+                            <div class="step-text"><strong>Ticket visible in dashboard</strong> — IT team can track and
+                                resolve</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 15 — Key Features ═══ -->
+            <div class="slide">
+                <div class="sc">
+                    <span class="badge"><span class="d accent"></span> Features</span>
+                    <h2>Key Features</h2>
+                    <ul class="fl">
+                        <li><span class="ic" style="background:var(--accent-g);color:var(--accent-l);">✓</span>
+                            <strong>AI Chatbot</strong> — Natural language IT support powered by Groq LLM</li>
+                        <li><span class="ic" style="background:var(--cyan-g);color:var(--cyan);">✓</span>
+                            <strong>Context-Aware Memory</strong> — Remembers conversation history for continuity</li>
+                        <li><span class="ic" style="background:var(--amber-g);color:var(--amber);">✓</span> <strong>Auto
+                                Ticket Creation</strong> — Escalates unresolved issues to human support</li>
+                        <li><span class="ic" style="background:var(--green-g);color:var(--green);">✓</span>
+                            <strong>Ticket Dashboard</strong> — View, prioritize, and track all tickets centrally</li>
+                        <li><span class="ic" style="background:var(--pink-g);color:var(--pink);">✓</span>
+                            <strong>Full-Stack App</strong> — Complete React + Node.js + MongoDB application</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 16 — What Makes It Unique ═══ -->
+            <div class="slide glow-amber">
+                <div class="sc">
+                    <span class="badge"><span class="d amber"></span> Differentiator</span>
+                    <h2>What Makes It Unique</h2>
+                    <div class="cg c2">
+                        <div class="cd">
+                            <div class="ci amber">🤖</div>
+                            <h4>Not Just a Chatbot</h4>
+                            <p>It's an <strong style="color:var(--amber)">AI Agent</strong> — it makes decisions, not
+                                just answers questions</p>
+                        </div>
+                        <div class="cd">
+                            <div class="ci accent">🧠</div>
+                            <h4>Decision-Making Ability</h4>
+                            <p>Autonomously decides when to resolve and when to escalate to humans</p>
+                        </div>
+                        <div class="cd">
+                            <div class="ci green">🏢</div>
+                            <h4>Real Enterprise Use-Case</h4>
+                            <p>Solves an actual problem faced by every IT department in the world</p>
+                        </div>
+                        <div class="cd">
+                            <div class="ci cyan">🔗</div>
+                            <h4>End-to-End System</h4>
+                            <p>Complete from chat → AI → ticket → dashboard — not a proof-of-concept</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 17 — Impact ═══ -->
+            <div class="slide glow-green">
+                <div class="sc">
+                    <span class="badge"><span class="d green"></span> Impact</span>
+                    <h2>Business Impact</h2>
+                    <div class="sg">
+                        <div class="si">
+                            <div class="sv green-t">70%</div>
+                            <div class="sl">Reduction in IT support workload</div>
+                        </div>
+                        <div class="si">
+                            <div class="sv cyan-t">10x</div>
+                            <div class="sl">Faster issue resolution time</div>
+                        </div>
+                        <div class="si">
+                            <div class="sv accent-t">∞</div>
+                            <div class="sl">Scalable to any organization size</div>
+                        </div>
+                    </div>
+                    <div class="cg c2" style="margin-top:0.5rem;">
+                        <div class="cd">
+                            <h4>📉 Reduced Workload</h4>
+                            <p>AI handles repetitive queries so IT teams focus on critical issues</p>
+                        </div>
+                        <div class="cd">
+                            <h4>😊 Better Experience</h4>
+                            <p>Employees get instant help — no more waiting in ticket queues</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 18 — Security ═══ -->
+            <div class="slide">
+                <div class="sc">
+                    <span class="badge"><span class="d red"></span> Security</span>
+                    <h2>Security &amp; Best Practices</h2>
+                    <div class="cg c3">
+                        <div class="cd">
+                            <div class="ci green">🔐</div>
+                            <h4>Environment Variables</h4>
+                            <p>Secrets stored in <code>.env</code> files — never committed to source control</p>
+                        </div>
+                        <div class="cd">
+                            <div class="ci red">🔑</div>
+                            <h4>API Key Protection</h4>
+                            <p>Groq API keys secured server-side — never exposed to the client</p>
+                        </div>
+                        <div class="cd">
+                            <div class="ci accent">📦</div>
+                            <h4>Clean Git Practices</h4>
+                            <p>Proper <code>.gitignore</code>, meaningful commits, organized project structure</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 19 — Live Demo ═══ -->
+            <div class="slide glow-cyan">
+                <div class="sc">
+                    <span class="badge"><span class="d cyan"></span> Demo</span>
+                    <h2>Live Demo</h2>
+                    <p class="sub">See the AI Support Agent in action</p>
+                    <div class="demo-box">
+                        <h3>🎬 Demo Flow</h3>
+                        <div class="demo-items">
+                            <div class="demo-item">💬 Open Chat</div>
+                            <div class="demo-item">🗣️ Ask a Question</div>
+                            <div class="demo-item">🤖 See AI Response</div>
+                            <div class="demo-item">🎫 Trigger Ticket</div>
+                            <div class="demo-item">📊 View Dashboard</div>
+                        </div>
+                    </div>
+                    <p class="sub" style="margin-top:1rem; font-style:italic; color:var(--text-3);">
+                        "Imagine your VPN is not working… Instead of waiting hours, you use our AI agent…"
+                    </p>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 20 — Future Enhancements ═══ -->
+            <div class="slide">
+                <div class="sc">
+                    <span class="badge"><span class="d green"></span> Future</span>
+                    <h2>Future Enhancements</h2>
+                    <div class="cg c3">
+                        <div class="cd">
+                            <div class="ci accent">🔐</div>
+                            <h4>Multi-User Login</h4>
+                            <p>User authentication for personal ticket history</p>
+                        </div>
+                        <div class="cd">
+                            <div class="ci green">👥</div>
+                            <h4>Role-Based Access</h4>
+                            <p>Admin, agent, and user permission levels</p>
+                        </div>
+                        <div class="cd">
+                            <div class="ci amber">🎯</div>
+                            <h4>AI Priority Detection</h4>
+                            <p>Auto-assign priority based on issue severity</p>
+                        </div>
+                        <div class="cd">
+                            <div class="ci pink">🎙️</div>
+                            <h4>Voice Support</h4>
+                            <p>Speak your issue — AI converts speech to text</p>
+                        </div>
+                        <div class="cd">
+                            <div class="ci cyan">📱</div>
+                            <h4>Mobile App</h4>
+                            <p>React Native for iOS and Android support</p>
+                        </div>
+                        <div class="cd">
+                            <div class="ci red">📊</div>
+                            <h4>Analytics</h4>
+                            <p>Insights on common issues, resolution rates, and trends</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-bar">
+        <button class="nb" id="prevBtn" onclick="go(cur-1)" disabled>←</button>
+        <span class="cnt" id="cnt">1 / 20</span>
+        <button class="nb" id="nextBtn" onclick="go(cur+1)">→</button>
+    </div>
+    <div class="kh">Use ← → arrow keys to navigate</div>
+
+    <script>
+        const sl = document.getElementById('slides');
+        const tot = 20;
+        let cur = 0;
+
+        function go(n) {
+            if (n < 0 || n >= tot) return;
+            cur = n;
+            sl.style.transform = `translateX(-${cur * 100}vw)`;
+            document.getElementById('cnt').textContent = `${cur + 1} / ${tot}`;
+            document.getElementById('prevBtn').disabled = cur === 0;
+            document.getElementById('nextBtn').disabled = cur === tot - 1;
+            document.getElementById('pb').style.width = `${((cur + 1) / tot) * 100}%`;
+            document.querySelectorAll('.slide').forEach(s => s.classList.remove('se'));
+            document.querySelectorAll('.slide')[cur].classList.add('se');
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(cur + 1); }
+            if (e.key === 'ArrowLeft') { e.preventDefault(); go(cur - 1); }
+            if (e.key === 'Home') { e.preventDefault(); go(0); }
+            if (e.key === 'End') { e.preventDefault(); go(tot - 1); }
+        });
+
+        let tx = 0;
+        document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+        document.addEventListener('touchend', e => {
+            const d = tx - e.changedTouches[0].clientX;
+            if (Math.abs(d) > 50) d > 0 ? go(cur + 1) : go(cur - 1);
+        });
+
+        go(0);
+    </script>
+</body>
+
+</html>

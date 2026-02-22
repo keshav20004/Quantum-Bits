@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resume Screener AI — Presentation</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ── Reset ── */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-slide: #0f1117;
+            --surface: #161922;
+            --surface-hover: #1c2030;
+            --border: rgba(255, 255, 255, 0.06);
+            --text-primary: #f0f0f5;
+            --text-secondary: #8b8fa3;
+            --text-muted: #5a5e72;
+            --accent: #6366f1;
+            --accent-light: #818cf8;
+            --accent-glow: rgba(99, 102, 241, 0.25);
+            --green: #22c55e;
+            --green-glow: rgba(34, 197, 94, 0.2);
+            --red: #ef4444;
+            --red-glow: rgba(239, 68, 68, 0.2);
+            --amber: #f59e0b;
+            --amber-glow: rgba(245, 158, 11, 0.2);
+            --cyan: #06b6d4;
+            --cyan-glow: rgba(6, 182, 212, 0.2);
+            --pink: #ec4899;
+            --pink-glow: rgba(236, 72, 153, 0.2);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Slider Container ── */
+        .slider {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slides {
+            display: flex;
+            width: calc(100vw * 21);
+            height: 100vh;
+            transition: transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 5rem;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        /* ── Ambient Glow Effect ── */
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        /* ── Typography ── */
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 1.15;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+            text-align: center;
+            margin-bottom: 0.75rem;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 600px;
+            line-height: 1.65;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--accent-light), var(--cyan), var(--pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .accent-text {
+            color: var(--accent-light);
+        }
+
+        .green-text {
+            color: var(--green);
+        }
+
+        .red-text {
+            color: var(--red);
+        }
+
+        .amber-text {
+            color: var(--amber);
+        }
+
+        .cyan-text {
+            color: var(--cyan);
+        }
+
+        .pink-text {
+            color: var(--pink);
+        }
+
+        /* ── Slide Content ── */
+        .slide-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        /* ── Badge ── */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.35rem 0.85rem;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        .badge .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .badge .dot.green {
+            background: var(--green);
+            box-shadow: 0 0 8px var(--green-glow);
+        }
+
+        .badge .dot.accent {
+            background: var(--accent-light);
+            box-shadow: 0 0 8px var(--accent-glow);
+        }
+
+        .badge .dot.amber {
+            background: var(--amber);
+            box-shadow: 0 0 8px var(--amber-glow);
+        }
+
+        .badge .dot.cyan {
+            background: var(--cyan);
+            box-shadow: 0 0 8px var(--cyan-glow);
+        }
+
+        .badge .dot.pink {
+            background: var(--pink);
+            box-shadow: 0 0 8px var(--pink-glow);
+        }
+
+        .badge .dot.red {
+            background: var(--red);
+            box-shadow: 0 0 8px var(--red-glow);
+        }
+
+        /* ── Cards ── */
+        .card-grid {
+            display: grid;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .card-grid.cols-2 {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .card-grid.cols-3 {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .card-grid.cols-4 {
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.4rem;
+            transition: background 0.2s;
+        }
+
+        .card:hover {
+            background: var(--surface-hover);
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-icon.accent {
+            background: var(--accent-glow);
+        }
+
+        .card-icon.green {
+            background: var(--green-glow);
+        }
+
+        .card-icon.cyan {
+            background: var(--cyan-glow);
+        }
+
+        .card-icon.amber {
+            background: var(--amber-glow);
+        }
+
+        .card-icon.pink {
+            background: var(--pink-glow);
+        }
+
+        .card-icon.red {
+            background: var(--red-glow);
+        }
+
+        .card h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.35rem;
+        }
+
+        .card p {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            line-height: 1.55;
+        }
+
+        /* ── Code Block ── */
+        .code-block {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.78rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        .code-block .keyword {
+            color: var(--accent-light);
+        }
+
+        .code-block .string {
+            color: var(--green);
+        }
+
+        .code-block .comment {
+            color: var(--text-muted);
+        }
+
+        .code-block .func {
+            color: var(--cyan);
+        }
+
+        .code-block .type {
+            color: var(--amber);
+        }
+
+        .code-block .decorator {
+            color: var(--pink);
+        }
+
+        /* ── Flow Diagram ── */
+        .flow {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .flow-step {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.9rem 1.3rem;
+            font-size: 0.82rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .flow-arrow {
+            color: var(--text-muted);
+            font-size: 1.25rem;
+        }
+
+        /* ── Big Number ── */
+        .big-number {
+            font-size: 5rem;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            line-height: 1;
+        }
+
+        /* ── List ── */
+        .feature-list {
+            list-style: none;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            line-height: 1.55;
+        }
+
+        .feature-list .icon {
+            flex-shrink: 0;
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            margin-top: 2px;
+        }
+
+        /* ── Table ── */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th,
+        .data-table td {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.85rem;
+        }
+
+        .data-table th {
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+        }
+
+        .data-table td {
+            color: var(--text-secondary);
+        }
+
+        /* ── Divider ── */
+        .divider {
+            width: 60px;
+            height: 3px;
+            border-radius: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--cyan));
+            margin: 0.5rem auto;
+        }
+
+        /* ── Navigation ── */
+        .nav-bar {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(22, 25, 34, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 0.55rem 1.2rem;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            width: 38px;
+            height: 38px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: background 0.2s, border-color 0.2s;
+            font-size: 1rem;
+        }
+
+        .nav-btn:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: default;
+        }
+
+        .nav-btn:disabled:hover {
+            background: var(--surface);
+            border-color: var(--border);
+        }
+
+        .slide-counter {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            min-width: 60px;
+            text-align: center;
+        }
+
+        /* ── Progress Dots ── */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--cyan), var(--pink));
+            transition: width 0.5s ease;
+            z-index: 100;
+        }
+
+        /* ── Slide-specific styles ── */
+        .team-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-top: 1.5rem;
+        }
+
+        .logo-icon {
+            width: 180px;
+            height: 180px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 16px;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            width: 100%;
+            text-align: center;
+        }
+
+        .stat-item .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        .stat-item .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .tech-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.5rem 0.85rem;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .tech-pill .emoji {
+            font-size: 1rem;
+        }
+
+        .tech-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            justify-content: center;
+        }
+
+        /* ── Keyboard hint ── */
+        .keyboard-hint {
+            position: fixed;
+            bottom: 6rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            z-index: 100;
+            opacity: 0;
+            animation: fadeInHint 1s 2s forwards;
+        }
+
+        @keyframes fadeInHint {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* ── Animations ── */
+        .slide-enter .slide-content>* {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.5s forwards;
+        }
+
+        .slide-enter .slide-content>*:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .slide-enter .slide-content>*:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .slide-enter .slide-content>*:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .slide-enter .slide-content>*:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .slide-enter .slide-content>*:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        .slide-enter .slide-content>*:nth-child(6) {
+            animation-delay: 0.6s;
+        }
+
+        .slide-enter .slide-content>*:nth-child(7) {
+            animation-delay: 0.7s;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── Comparison Slide ── */
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            width: 100%;
+        }
+
+        .comparison-col {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.5rem;
+        }
+
+        .comparison-col h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .comparison-col ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .comparison-col li {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* ── Score Demo ── */
+        .score-demo {
+            width: 160px;
+            height: 160px;
+            position: relative;
+        }
+
+        .score-demo svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .score-demo .ring-bg {
+            fill: none;
+            stroke: var(--border);
+            stroke-width: 8;
+        }
+
+        .score-demo .ring-fill {
+            fill: none;
+            stroke: var(--green);
+            stroke-width: 8;
+            stroke-linecap: round;
+            stroke-dasharray: 264 264;
+            transform: rotate(-90deg);
+            transform-origin: center;
+            transition: stroke-dasharray 1s ease;
+        }
+
+        .score-center {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .score-center .val {
+            font-size: 2.5rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .score-center .lbl {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 0.2rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Slider -->
+    <div class="slider" id="slider">
+        <div class="slides" id="slides">
+
+            <!-- ═══ SLIDE 1: Title ═══ -->
+            <div class="slide slide-enter">
+                <div class="slide-content">
+                    <div class="logo-icon"><img src="quantum_bits_logo.jpg" alt="Quantum Bits Logo"></div>
+                    <h1><span class="gradient-text">Resume Screener AI</span></h1>
+                    <p class="subtitle">Intelligent Resume-to-Job-Description matching powered by Google Gemini AI</p>
+                    <div class="divider"></div>
+                    <p class="team-name">Quantum Bits</p>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 2: Problem Statement ═══ -->
+            <div class="slide">
+                <div class="slide-content">
+                    <span class="badge"><span class="dot red"></span> Problem</span>
+                    <h2>The Hiring Challenge</h2>
+                    <div class="stat-grid">
+                        <div class="stat-item">
+                            <div class="stat-value red-text">250+</div>
+                            <div class="stat-label">Resumes per job posting</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value amber-text">23 sec</div>
+                            <div class="stat-label">Avg. time per manual review</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value pink-text">75%</div>
+                            <div class="stat-label">Resumes are unqualified</div>
+                        </div>
+                    </div>
+                    <p class="subtitle">Manual screening is slow, biased, and inconsistent — costing companies time and
+                        top talent.</p>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 3: Solution ═══ -->
+            <div class="slide">
+                <div class="slide-content">
+                    <span class="badge"><span class="dot green"></span> Solution</span>
+                    <h2>AI-Powered Resume Screening</h2>
+                    <p class="subtitle">Upload a resume and job description → Get an instant match score, skill gap
+                        analysis, and a summary — all in seconds.</p>
+                    <div class="card-grid cols-3">
+                        <div class="card">
+                            <div class="card-icon accent">📄</div>
+                            <h4>Upload PDF</h4>
+                            <p>Resume & JD in PDF or text format</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon green">🤖</div>
+                            <h4>AI Analysis</h4>
+                            <p>Gemini LLM evaluates the match</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon cyan">📊</div>
+                            <h4>Score & Report</h4>
+                            <p>Match %, matching & missing skills</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 4: Tech Stack Overview ═══ -->
+            <div class="slide">
+                <div class="slide-content">
+                    <span class="badge"><span class="dot cyan"></span> Technology</span>
+                    <h2>Tech Stack</h2>
+                    <p class="subtitle">A modern full-stack architecture combining Python and JavaScript</p>
+                    <div class="tech-pills">
+                        <div class="tech-pill"><span class="emoji">🐍</span> Python</div>
+                        <div class="tech-pill"><span class="emoji">⚡</span> FastAPI</div>
+                        <div class="tech-pill"><span class="emoji">🦜</span> LangChain</div>
+                        <div class="tech-pill"><span class="emoji">✨</span> Gemini AI</div>
+                        <div class="tech-pill"><span class="emoji">⚛️</span> React</div>
+                        <div class="tech-pill"><span class="emoji">🚀</span> Vite</div>
+                        <div class="tech-pill"><span class="emoji">📜</span> PyPDF2</div>
+                        <div class="tech-pill"><span class="emoji">🎨</span> CSS</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 5: Architecture ═══ -->
+            <div class="slide">
+                <div class="slide-content">
+                    <span class="badge"><span class="dot accent"></span> Architecture</span>
+                    <h2>System Architecture</h2>
+                    <div class="flow">
+                        <div class="flow-step">👤 User</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">⚛️ React Frontend</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">🔗 REST API</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">⚡ FastAPI</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">📄 PDF Parser</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">🤖 Gemini LLM</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">📊 JSON Result</div>
+                    </div>
+                    <p class="subtitle" style="margin-top: 1rem;">End-to-end pipeline from resume upload to AI-powered
+                        scoring</p>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 6: Backend — FastAPI ═══ -->
+            <div class="slide">
+                <div class="slide-content">
+                    <span class="badge"><span class="dot green"></span> Backend</span>
+                    <h2>FastAPI Server</h2>
+                    <p class="subtitle">High-performance Python framework with automatic API documentation</p>
+                    <div class="code-block">
+                        <pre><span class="keyword">from</span> fastapi <span class="keyword">import</span> FastAPI, UploadFile, File, Form
+<span class="keyword">from</span> fastapi.middleware.cors <span class="keyword">import</span> CORSMiddleware
+
+app = <span class="func">FastAPI</span>(title=<span class="string">"Resume Screening AI"</span>)
+
+<span class="decorator">@app.post</span>(<span class="string">"/analyze"</span>)
+<span class="keyword">async def</span> <span class="func">seniority_analyze</span>(
+    resume: <span class="type">UploadFile</span> = <span class="func">File</span>(...),
+    job_description: <span class="type">str</span> = <span class="func">Form</span>(None),
+    job_description_file: <span class="type">UploadFile</span> = <span class="func">File</span>(None)
+):
+    <span class="comment"># Parse → Analyze → Return JSON</span></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 7: PDF Parser ═══ -->
+            <div class="slide">
+                <div class="slide-content">
+                    <span class="badge"><span class="dot amber"></span> Module</span>
+                    <h2>PDF Parsing Engine</h2>
+                    <p class="subtitle">Extracts raw text from uploaded PDF files using PyPDF2</p>
+                    <div class="code-block">
+                        <pre><span class="keyword">import</span> PyPDF2
+<span class="keyword">import</span> io
+
+<span class="keyword">def</span> <span class="func">extract_text_from_pdf</span>(file_content: <span class="type">bytes</span>) -> <span class="type">str</span>:
+    <span class="string">"""Extracts text from a PDF file content."""</span>
+    pdf_reader = PyPDF2.<span class="func">PdfReader</span>(io.<span class="func">BytesIO</span>(file_content))
+    text = <span class="string">""</span>
+    <span class="keyword">for</span> page <span class="keyword">in</span> pdf_reader.pages:
+        text += page.<span class="func">extract_text</span>() <span class="keyword">or</span> <span class="string">""</span>
+    <span class="keyword">return</span> text.<span class="func">strip</span>()</pre>
+                    </div>
+                    <div class="card-grid cols-2" style="margin-top:0.5rem;">
+                        <div class="card">
+                            <h4>📥 Input</h4>
+                            <p>Raw PDF bytes from file upload</p>
+                        </div>
+                        <div class="card">
+                            <h4>📤 Output</h4>
+                            <p>Clean plain text for LLM analysis</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 8: LLM Logic ═══ -->
+            <div class="slide">
+                <div class="slide-content">
+                    <span class="badge"><span class="dot pink"></span> AI Core</span>
+                    <h2>LLM Scoring Engine</h2>
+                    <p class="subtitle">LangChain orchestrates the prompt → Gemini → structured output pipeline</p>
+                    <div class="code-block">
+                        <pre><span class="keyword">class</span> <span class="type">ResumeScore</span>(<span class="type">BaseModel</span>):
+    score: <span class="type">int</span>             <span class="comment"># Match 0–100</span>
+    matching_skills: <span class="type">List[str]</span>  <span class="comment"># Skills found in both</span>
+    missing_skills: <span class="type">List[str]</span>   <span class="comment"># Required but absent</span>
+    summary: <span class="type">str</span>            <span class="comment"># Brief suitability note</span>
+
+llm = <span class="func">ChatGoogleGenerativeAI</span>(model=<span class="string">"gemini-flash-latest"</span>)
+parser = <span class="func">JsonOutputParser</span>(pydantic_object=<span class="type">ResumeScore</span>)
+
+chain = prompt | llm | parser  <span class="comment"># LangChain pipeline</span></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 9: Pydantic Schema ═══ -->
+            <div class="slide">
+                <div class="slide-content">
+                    <span class="badge"><span class="dot cyan"></span> Data Model</span>
+                    <h2>Structured Output</h2>
+                    <p class="subtitle">Pydantic model ensures type-safe, validated JSON output from the LLM</p>
+                    <div class="card-grid cols-4">
+                        <div class="card">
+                            <div class="card-icon green">📊</div>
+                            <h4>Score</h4>
+                            <p>0–100 integer match percentage</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon cyan">✅</div>
+                            <h4>Matching Skills</h4>
+                            <p>Skills present in both resume & JD</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon red">❌</div>
+                            <h4>Missing Skills</h4>
+                            <p>Required skills not found in resume</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon amber">📝</div>
+                            <h4>Summary</h4>
+                            <p>Brief AI analysis of fit</p>
+                        </div>
+                    </div>
+                    <div class="code-block" style="margin-top: 0.5rem;">
+                        <pre><span class="comment">// Example API Response</span>
+{
+  <span class="string">"score"</span>: 82,
+  <span class="string">"matching_skills"</span>: [<span class="string">"Python"</span>, <span class="string">"React"</span>, <span class="string">"SQL"</span>],
+  <span class="string">"missing_skills"</span>: [<span class="string">"Docker"</span>, <span class="string">"AWS"</span>],
+  <span class="string">"summary"</span>: <span class="string">"Strong match with minor gaps..."</span>
+}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 10: Frontend Overview ═══ -->
+            <div class="slide">
+                <div class="slide-content">
+                    <span class="badge"><span class="dot accent"></span> Frontend</span>
+                    <h2>React + Vite UI</h2>
+                    <p class="subtitle">Fast, responsive single-page application with modern design</p>
+                    <div class="card-grid cols-2">
+                        <div class="card">
+                            <div class="card-icon accent">⚛️</div>
+                            <h4>React 19</h4>
+                            <p>Latest React with hooks for state management — useState for file, JD, loading, results,
+                                and errors</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon green">🚀</div>
+                            <h4>Vite 7</h4>
+                            <p>Lightning-fast HMR dev server and optimized production bundling</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon cyan">🎨</div>
+                            <h4>Glassmorphism CSS</h4>
+                            <p>Custom design system with CSS variables, smooth animations, responsive layout</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon amber">📡</div>
+                            <h4>Axios</h4>
+                            <p>Clean HTTP client for FormData uploads to the /analyze endpoint</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 11: UI Components ═══ -->
+            <div class="slide">
+                <div class="slide-content">
+                    <span class="badge"><span class="dot green"></span> UI</span>
+                    <h2>User Interface Components</h2>
+                    <div class="card-grid cols-3">
+                        <div class="card">
+                            <h4>📤 Resume Upload</h4>
+                            <p>Drag & drop zone for PDF resumes with file validation</p>
+                        </div>
+                        <div class="card">
+                            <h4>📝 JD Input</h4>
+                            <p>Toggle between pasting text and uploading a PDF</p>
+                        </div>
+                        <div class="card">
+                            <h4>🔘 Analyze CTA</h4>
+                            <p>Full-width button with loading spinner animation</p>
+                        </div>
+                        <div class="card">
+                            <h4>🎯 Score Ring</h4>
+                            <p>Animated SVG circle showing match percentage with color coding</p>
+                        </div>
+                        <div class="card">
+                            <h4>📊 Skills Tags</h4>
+                            <p>Green/red tagged chips for matching & missing skills</p>
+                        </div>
+                        <div class="card">
+                            <h4>📋 Summary</h4>
+                            <p>AI-generated paragraph about candidate suitability</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 12: Score Visualization ═══ -->
+            <div class="slide">
+                <div class="slide-content">
+                    <span class="badge"><span class="dot green"></span> Feature</span>
+                    <h2>Score Visualization</h2>
+                    <p class="subtitle">Dynamic SVG ring with color-coded match scores</p>
+                    <div class="score-demo">
+                        <svg viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="42" class="ring-bg" />
+                            <circle cx="50" cy="50" r="42" class="ring-fill" style="stroke-dasharray: 216 264;" />
+                        </svg>
+                        <div class="score-center">
+                            <span class="val green-text">82</span>
+                            <span class="lbl">match</span>
+                        </div>
+                    </div>
+                    <div class="card-grid cols-3" style="margin-top:0.5rem;">
+                        <div class="card" style="text-align:center;">
+                            <h4 class="green-text">≥ 75%</h4>
+                            <p>Green — Strong match</p>
+                        </div>
+                        <div class="card" style="text-align:center;">
+                            <h4 class="amber-text">50–74%</h4>
+                            <p>Amber — Moderate fit</p>
+                        </div>
+                        <div class="card" style="text-align:center;">
+                            <h4 class="red-text">
+                                < 50%</h4>
+                                    <p>Red — Weak match</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 13: API Design ═══ -->
+            <div class="slide">
+                <div class="slide-content">
+                    <span class="badge"><span class="dot amber"></span> API</span>
+                    <h2>RESTful API Design</h2>
+                    <p class="subtitle">Single endpoint powered by FastAPI with automatic OpenAPI documentation</p>
+                    <div class="code-block">
+                        <pre><span class="comment"># Endpoint</span>
+<span class="keyword">POST</span> <span class="string">/analyze</span>
+
+<span class="comment"># Request (multipart/form-data)</span>
+  resume:               <span class="type">File</span>   <span class="comment">(required, PDF)</span>
+  job_description:      <span class="type">string</span> <span class="comment">(optional, text)</span>
+  job_description_file: <span class="type">File</span>   <span class="comment">(optional, PDF)</span>
+
+<span class="comment"># Response (application/json)</span>
+  { score, matching_skills, missing_skills, summary }</pre>
+                    </div>
+                    <div class="card-grid cols-2" style="margin-top:0.5rem;">
+                        <div class="card">
+                            <h4>🔀 CORS Enabled</h4>
+                            <p>Allows cross-origin requests from any frontend domain</p>
+                        </div>
+                        <div class="card">
+                            <h4>📖 Auto Docs</h4>
+                            <p>Swagger UI at /docs — test the API interactively in-browser</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 14: LangChain Pipeline ═══ -->
+            <div class="slide">
+                <div class="slide-content">
+                    <span class="badge"><span class="dot pink"></span> Pipeline</span>
+                    <h2>LangChain Pipeline</h2>
+                    <p class="subtitle">A composable chain: Prompt → LLM → Parser</p>
+                    <div class="flow">
+                        <div class="flow-step" style="border-color: var(--accent);">
+                            📝 <strong>Prompt Template</strong><br />
+                            <small style="color:var(--text-muted);">Injects resume + JD + format instructions</small>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step" style="border-color: var(--pink);">
+                            🤖 <strong>Gemini Flash</strong><br />
+                            <small style="color:var(--text-muted);">Processes & evaluates match</small>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step" style="border-color: var(--green);">
+                            📊 <strong>JSON Parser</strong><br />
+                            <small style="color:var(--text-muted);">Validates into Pydantic model</small>
+                        </div>
+                    </div>
+                    <div class="code-block" style="margin-top:1rem;">
+                        <pre>chain = prompt | llm | parser
+result = chain.<span class="func">invoke</span>({
+    <span class="string">"resume_text"</span>: resume_text,
+    <span class="string">"job_description"</span>: job_description,
+    <span class="string">"format_instructions"</span>: parser.<span class="func">get_format_instructions</span>()
+})</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 15: Dual Input Modes ═══ -->
+            <div class="slide">
+                <div class="slide-content">
+                    <span class="badge"><span class="dot cyan"></span> Flexibility</span>
+                    <h2>Dual JD Input Modes</h2>
+                    <p class="subtitle">Users can provide job descriptions in two ways</p>
+                    <div class="comparison">
+                        <div class="comparison-col">
+                            <h4>📝 Paste Text</h4>
+                            <ul>
+                                <li>✦ Quick for short JDs</li>
+                                <li>✦ Copy from job boards</li>
+                                <li>✦ Instant — no file needed</li>
+                                <li>✦ Edit before analysis</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-col">
+                            <h4>📄 Upload PDF</h4>
+                            <ul>
+                                <li>✦ Full formatted JDs</li>
+                                <li>✦ Preserves document layout</li>
+                                <li>✦ Multi-page support</li>
+                                <li>✦ Same PyPDF2 engine</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 16: Error Handling ═══ -->
+            <div class="slide">
+                <div class="slide-content">
+                    <span class="badge"><span class="dot red"></span> Robustness</span>
+                    <h2>Error Handling</h2>
+                    <p class="subtitle">Comprehensive validation at every layer</p>
+                    <div class="card-grid cols-2">
+                        <div class="card">
+                            <div class="card-icon red">🔒</div>
+                            <h4>File Validation</h4>
+                            <p>Only PDF files accepted — non-PDF uploads are rejected with a 400 error</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon amber">📋</div>
+                            <h4>Missing Input</h4>
+                            <p>JD is required — clear error if neither text nor file is provided</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon cyan">🖥️</div>
+                            <h4>Frontend Guards</h4>
+                            <p>Client-side validation prevents premature submission with inline error banners</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon pink">🔎</div>
+                            <h4>Server Traceback</h4>
+                            <p>Full stack traces logged on failure for fast debugging</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 17: Design System ═══ -->
+            <div class="slide">
+                <div class="slide-content">
+                    <span class="badge"><span class="dot accent"></span> Design</span>
+                    <h2>Design System</h2>
+                    <p class="subtitle">Clean, minimal UI with CSS variables and responsive layout</p>
+                    <div class="card-grid cols-3">
+                        <div class="card">
+                            <h4>🎨 Slate Palette</h4>
+                            <p>10-shade slate color scale from <code>--slate-50</code> to <code>--slate-900</code></p>
+                        </div>
+                        <div class="card">
+                            <h4>✨ Micro Animations</h4>
+                            <p>slideUp entrance, spinner rotation, ring-progress transitions</p>
+                        </div>
+                        <div class="card">
+                            <h4>📱 Responsive</h4>
+                            <p>Breakpoint at 600px — stacks layouts, resizes type and rings</p>
+                        </div>
+                        <div class="card">
+                            <h4>🔤 Inter Font</h4>
+                            <p>Google Fonts loaded with weights 400–700 for typography hierarchy</p>
+                        </div>
+                        <div class="card">
+                            <h4>📐 Layout</h4>
+                            <p>Flexbox with 640px max-width main content container</p>
+                        </div>
+                        <div class="card">
+                            <h4>💫 Hover Effects</h4>
+                            <p>Border color transitions on dropzone, button background shifts</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 18: Deployment ═══ -->
+            <div class="slide">
+                <div class="slide-content">
+                    <span class="badge"><span class="dot green"></span> Deployment</span>
+                    <h2>Hosting Strategy</h2>
+                    <p class="subtitle">Flexible deployment options for production</p>
+                    <div class="card-grid cols-2">
+                        <div class="card">
+                            <div class="card-icon accent">🖥️</div>
+                            <h4>Backend Hosting</h4>
+                            <p>Render / Railway / Heroku — deploy FastAPI with uvicorn, set PORT and GOOGLE_API_KEY env
+                                vars</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon green">🌐</div>
+                            <h4>Frontend Hosting</h4>
+                            <p>Vercel / Netlify — deploy the Vite dist folder, set VITE_API_URL env var</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon cyan">🔗</div>
+                            <h4>Unified Mode</h4>
+                            <p>Backend serves frontend dist files directly — single server deployment</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon amber">🚇</div>
+                            <h4>Dev Tunneling</h4>
+                            <p>ngrok for instant public URLs during development and testing</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 19: Key Features ═══ -->
+            <div class="slide">
+                <div class="slide-content">
+                    <span class="badge"><span class="dot accent"></span> Summary</span>
+                    <h2>Key Features</h2>
+                    <ul class="feature-list">
+                        <li><span class="icon" style="background:var(--accent-glow);color:var(--accent-light);">✓</span>
+                            Instant AI-powered resume-to-JD matching with 0–100 scoring</li>
+                        <li><span class="icon" style="background:var(--green-glow);color:var(--green);">✓</span> Skill
+                            gap analysis — see exactly which skills match and which are missing</li>
+                        <li><span class="icon" style="background:var(--cyan-glow);color:var(--cyan);">✓</span> Dual
+                            input modes — paste text or upload PDF for job descriptions</li>
+                        <li><span class="icon" style="background:var(--amber-glow);color:var(--amber);">✓</span>
+                            Beautiful responsive UI with animations and glassmorphism design</li>
+                        <li><span class="icon" style="background:var(--pink-glow);color:var(--pink);">✓</span>
+                            Structured JSON output validated by Pydantic models</li>
+                        <li><span class="icon" style="background:var(--accent-glow);color:var(--accent-light);">✓</span>
+                            LangChain pipeline with Google Gemini Flash for fast inference</li>
+                        <li><span class="icon" style="background:var(--green-glow);color:var(--green);">✓</span>
+                            Production-ready with CORS, error handling, and env config</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 20: Future Scope ═══ -->
+            <div class="slide">
+                <div class="slide-content">
+                    <span class="badge"><span class="dot amber"></span> Roadmap</span>
+                    <h2>Future Scope</h2>
+                    <div class="card-grid cols-2">
+                        <div class="card">
+                            <div class="card-icon accent">📦</div>
+                            <h4>Batch Processing</h4>
+                            <p>Upload multiple resumes and rank them against a single JD at once</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon green">🗃️</div>
+                            <h4>Database Storage</h4>
+                            <p>Store past analyses for comparison and candidate tracking</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon cyan">🔐</div>
+                            <h4>Authentication</h4>
+                            <p>User accounts for recruiters to manage their screening pipelines</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon amber">📈</div>
+                            <h4>Analytics Dashboard</h4>
+                            <p>Visualize hiring trends, skill demands, and candidate pools</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon pink">💡</div>
+                            <h4>Resume Improvement</h4>
+                            <p>AI suggestions for candidates to improve their match scores</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon red">🔌</div>
+                            <h4>ATS Integration</h4>
+                            <p>Connect with existing Applicant Tracking Systems via APIs</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SLIDE 21: Thank You ═══ -->
+            <div class="slide">
+                <div class="slide-content">
+                    <div class="logo-icon"><img src="quantum_bits_logo.jpg" alt="Quantum Bits Logo"></div>
+                    <h1><span class="gradient-text">Thank You</span></h1>
+                    <div class="divider"></div>
+                    <p class="subtitle">Resume Screener AI — by Quantum Bits</p>
+                    <p class="subtitle" style="font-size:0.9rem;margin-top:0.5rem;color:var(--text-muted);">Built with
+                        FastAPI • React • LangChain • Google Gemini</p>
+                </div>
+            </div>
+
+        </div><!-- /slides -->
+    </div><!-- /slider -->
+
+    <!-- Navigation -->
+    <div class="nav-bar">
+        <button class="nav-btn" id="prevBtn" onclick="goTo(current - 1)" disabled>←</button>
+        <span class="slide-counter" id="counter">1 / 21</span>
+        <button class="nav-btn" id="nextBtn" onclick="goTo(current + 1)">→</button>
+    </div>
+    <div class="keyboard-hint">Use ← → arrow keys to navigate</div>
+
+    <script>
+        const slides = document.getElementById('slides');
+        const total = 21;
+        let current = 0;
+
+        function goTo(n) {
+            if (n < 0 || n >= total) return;
+            current = n;
+            slides.style.transform = `translateX(-${current * 100}vw)`;
+            document.getElementById('counter').textContent = `${current + 1} / ${total}`;
+            document.getElementById('prevBtn').disabled = current === 0;
+            document.getElementById('nextBtn').disabled = current === total - 1;
+            document.getElementById('progressBar').style.width = `${((current + 1) / total) * 100}%`;
+
+            // Add animation class
+            const slideEls = document.querySelectorAll('.slide');
+            slideEls.forEach(s => s.classList.remove('slide-enter'));
+            slideEls[current].classList.add('slide-enter');
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goTo(current + 1); }
+            if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(current - 1); }
+            if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+            if (e.key === 'End') { e.preventDefault(); goTo(total - 1); }
+        });
+
+        // Touch support
+        let touchStartX = 0;
+        document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+        document.addEventListener('touchend', (e) => {
+            const diff = touchStartX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                diff > 0 ? goTo(current + 1) : goTo(current - 1);
+            }
+        });
+
+        // Initialize
+        goTo(0);
+    </script>
+</body>
+
+</html>
