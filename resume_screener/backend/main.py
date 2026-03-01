@@ -16,9 +16,9 @@ load_dotenv()
 from database import engine, get_db, Base
 from models import User, Transaction
 from auth import get_current_user, check_credits, deduct_credits
-from utils.parser import extract_text_from_pdf, extract_pdfs_from_zip
-from utils.llm_logic import score_resume, bulk_score_resumes
-from utils.csv_export import generate_csv
+from utils.parser import extract_text_from_pdf, extract_pdfs_from_zip, extract_jds_from_zip
+from utils.llm_logic import score_resume, bulk_score_resumes, bulk_score_resume_against_jds
+from utils.csv_export import generate_csv, generate_reverse_csv
 from routes.auth_routes import router as auth_router
 from routes.payment_routes import router as payment_router
 
@@ -42,6 +42,7 @@ app.add_middleware(
 
 # In-memory store for bulk results (keyed by session_id)
 bulk_results_store: dict[str, list[dict]] = {}
+reverse_results_store: dict[str, list[dict]] = {}
 
 
 # ── Single Resume Analyze (protected) ────────────────────────
@@ -149,7 +150,7 @@ async def bulk_analyze(
         processed = 0
 
         # Send initial metadata
-        yield f"data: {json.dumps({'type': 'start', 'total': total, 'session_id': session_id})}\\n\\n"
+        yield f"data: {json.dumps({'type': 'start', 'total': total, 'session_id': session_id})}\n\n"
 
         async for result in bulk_score_resumes(resume_pairs, final_jd, concurrency=20):
             processed += 1
@@ -157,7 +158,7 @@ async def bulk_analyze(
             result["total"] = total
             result["type"] = "result"
             results.append(result)
-            yield f"data: {json.dumps(result)}\\n\\n"
+            yield f"data: {json.dumps(result)}\n\n"
 
         # Store results for CSV download
         bulk_results_store[session_id] = results
@@ -177,7 +178,7 @@ async def bulk_analyze(
         # Send completion event
         shortlisted = sum(1 for r in results if r.get("score", 0) >= 60)
         avg_score = round(sum(r.get("score", 0) for r in results) / max(len(results), 1), 1)
-        yield f"data: {json.dumps({'type': 'complete', 'total': total, 'processed': processed, 'shortlisted': shortlisted, 'avg_score': avg_score, 'session_id': session_id, 'credits_remaining': credits_remaining})}\\n\\n"
+        yield f"data: {json.dumps({'type': 'complete', 'total': total, 'processed': processed, 'shortlisted': shortlisted, 'avg_score': avg_score, 'session_id': session_id, 'credits_remaining': credits_remaining})}\n\n"
 
     return StreamingResponse(
         event_stream(),
@@ -202,6 +203,118 @@ async def download_results(session_id: str):
         content=csv_bytes,
         media_type="text/csv",
         headers={"Content-Disposition": f"attachment; filename=screening_results_{session_id[:8]}.csv"},
+    )
+
+
+# ── Reverse Analyze: 1 Resume vs Multiple JDs (protected) ───
+
+@app.post("/reverse-analyze")
+async def reverse_analyze(
+    resume: UploadFile = File(...),
+    job_descriptions: list[UploadFile] = File(...),
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    Accepts 1 resume PDF + multiple JD PDFs (or a single ZIP of JDs).
+    Returns Server-Sent Events streaming each scored result in real-time.
+    """
+    # 1. Extract resume text
+    if not resume.filename or not resume.filename.lower().endswith(".pdf"):
+        raise HTTPException(status_code=400, detail="Resume must be a PDF file.")
+
+    resume_content = await resume.read()
+    resume_text = extract_text_from_pdf(resume_content)
+    if not resume_text:
+        raise HTTPException(status_code=400, detail="Could not extract text from resume PDF.")
+
+    # 2. Extract all JDs
+    jd_pairs: list[tuple[str, str]] = []  # (jd_filename, text)
+
+    for upload in job_descriptions:
+        content = await upload.read()
+        fname = upload.filename or "unknown.pdf"
+
+        if fname.lower().endswith(".zip"):
+            pairs = extract_jds_from_zip(content)
+            jd_pairs.extend(pairs)
+        elif fname.lower().endswith(".pdf"):
+            try:
+                text = extract_text_from_pdf(content)
+                if text:
+                    jd_pairs.append((fname, text))
+            except Exception:
+                pass
+
+    if not jd_pairs:
+        raise HTTPException(status_code=400, detail="No valid JD PDFs found in the uploaded files.")
+
+    total = len(jd_pairs)
+
+    # 3. Check credits BEFORE processing
+    check_credits(user, required=total)
+
+    session_id = str(uuid.uuid4())
+    user_id = user.id
+
+    # 4. Stream results via SSE
+    async def event_stream():
+        results = []
+        processed = 0
+
+        yield f"data: {json.dumps({'type': 'start', 'total': total, 'session_id': session_id})}\n\n"
+
+        async for result in bulk_score_resume_against_jds(resume_text, jd_pairs, concurrency=20):
+            processed += 1
+            result["index"] = processed
+            result["total"] = total
+            result["type"] = "result"
+            results.append(result)
+            yield f"data: {json.dumps(result)}\n\n"
+
+        # Store results for CSV download
+        reverse_results_store[session_id] = results
+
+        # Deduct credits
+        deduct_db = next(get_db())
+        try:
+            db_user = deduct_db.query(User).filter(User.id == user_id).first()
+            if db_user:
+                deduct_credits(deduct_db, db_user, count=total)
+                credits_remaining = db_user.resume_credits
+            else:
+                credits_remaining = 0
+        finally:
+            deduct_db.close()
+
+        # Send completion event
+        matched = sum(1 for r in results if r.get("score", 0) >= 60)
+        avg_score = round(sum(r.get("score", 0) for r in results) / max(len(results), 1), 1)
+        yield f"data: {json.dumps({'type': 'complete', 'total': total, 'processed': processed, 'matched': matched, 'avg_score': avg_score, 'session_id': session_id, 'credits_remaining': credits_remaining})}\n\n"
+
+    return StreamingResponse(
+        event_stream(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )
+
+
+@app.get("/download-reverse-results/{session_id}")
+async def download_reverse_results(session_id: str):
+    """Download reverse screening results as CSV."""
+    results = reverse_results_store.get(session_id)
+    if not results:
+        raise HTTPException(status_code=404, detail="Results not found or expired.")
+
+    csv_bytes = generate_reverse_csv(results)
+    return Response(
+        content=csv_bytes,
+        media_type="text/csv",
+        headers={"Content-Disposition": f"attachment; filename=jd_match_results_{session_id[:8]}.csv"},
     )
 
 

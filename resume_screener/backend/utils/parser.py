@@ -35,3 +35,12 @@ def extract_pdfs_from_zip(zip_bytes: bytes) -> list[tuple[str, str]]:
                     # Skip corrupted PDFs
                     pass
     return results
+
+
+def extract_jds_from_zip(zip_bytes: bytes) -> list[tuple[str, str]]:
+    """
+    Extracts all JD PDF files from a ZIP archive.
+    Returns a list of (filename, extracted_text) tuples.
+    """
+    return extract_pdfs_from_zip(zip_bytes)
+

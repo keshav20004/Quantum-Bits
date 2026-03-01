@@ -413,6 +413,20 @@ textarea::placeholder {
   background: linear-gradient(135deg, var(--blue-700), var(--slate-900));
 }
 
+.cta.reverse-cta {
+  background: linear-gradient(135deg, #7c3aed, var(--slate-800));
+  font-size: 1rem;
+  padding: 0.85rem 1.5rem;
+}
+
+.cta.reverse-cta:hover {
+  background: linear-gradient(135deg, #6d28d9, var(--slate-900));
+}
+
+.progress-bar-fill.reverse-fill {
+  background: linear-gradient(90deg, #7c3aed, #6d28d9);
+}
+
 .loading-state {
   display: flex;
   align-items: center;

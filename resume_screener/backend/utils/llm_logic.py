@@ -98,3 +98,51 @@ async def bulk_score_resumes(
     for coro in asyncio.as_completed(tasks):
         result = await coro
         yield result
+
+
+async def async_score_resume_against_jd(
+    jd_filename: str,
+    resume_text: str,
+    jd_text: str,
+    semaphore: asyncio.Semaphore,
+) -> dict:
+    """Async wrapper for scoring a resume against a single JD (reverse mode)."""
+    async with semaphore:
+        try:
+            result = await asyncio.to_thread(score_resume, resume_text, jd_text)
+            result["jd_filename"] = jd_filename
+            return result
+        except Exception as e:
+            return {
+                "jd_filename": jd_filename,
+                "score": 0,
+                "verdict": "Rejected",
+                "reason": f"Error processing this JD: {str(e)}",
+                "matching_skills": [],
+                "missing_skills": [],
+                "summary": f"Error processing: {str(e)}",
+                "error": True,
+            }
+
+
+async def bulk_score_resume_against_jds(
+    resume_text: str,
+    jd_pairs: list[tuple[str, str]],
+    concurrency: int = 20,
+) -> AsyncGenerator[dict, None]:
+    """
+    Process one resume against multiple JDs concurrently (reverse mode).
+    Yields results one-by-one as they complete.
+    """
+    semaphore = asyncio.Semaphore(concurrency)
+
+    tasks = [
+        asyncio.create_task(
+            async_score_resume_against_jd(jd_filename, resume_text, jd_text, semaphore)
+        )
+        for jd_filename, jd_text in jd_pairs
+    ]
+
+    for coro in asyncio.as_completed(tasks):
+        result = await coro
+        yield result

@@ -26,3 +26,31 @@ def generate_csv(results: list[dict]) -> bytes:
         ])
     
     return output.getvalue().encode("utf-8")
+
+
+def generate_reverse_csv(results: list[dict]) -> bytes:
+    """Converts reverse-analyze results (1 resume vs multiple JDs) to CSV bytes."""
+    output = io.StringIO()
+    writer = csv.writer(output)
+
+    # Header
+    writer.writerow([
+        "Rank", "JD Filename", "Score", "Verdict", "Matching Skills", "Missing Skills", "Summary"
+    ])
+
+    # Sort by score descending and assign rank
+    sorted_results = sorted(results, key=lambda r: r.get("score", 0), reverse=True)
+
+    for rank, r in enumerate(sorted_results, 1):
+        writer.writerow([
+            rank,
+            r.get("jd_filename", ""),
+            r.get("score", 0),
+            r.get("verdict", ""),
+            ", ".join(r.get("matching_skills", [])),
+            ", ".join(r.get("missing_skills", [])),
+            r.get("summary", ""),
+        ])
+
+    return output.getvalue().encode("utf-8")
+
